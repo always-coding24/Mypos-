@@ -6,8 +6,7 @@
     <title>FloatFlow Dashboard</title>
     <!-- Chart.js for data visualization -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <!-- Google Fonts - SF Pro Display (simulated) or similar for Apple-like font -->
-    <!-- Using Inter as a close alternative for 'SF Pro Display' which isn't publicly available -->
+    <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Base styles for all elements */
@@ -17,28 +16,21 @@
             box-sizing: border-box;
         }
 
-        /* REMOVED: SVG filter definition that caused text distortion */
-
-        /* Body styling with a complex gradient background, noise, and floating orbs */
+        /* Body styling */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background:
-                /* Subtle radial gradients for background depth */
                 radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%),
                 radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.4), transparent 50%),
-                /* Dark base linear gradient */
                 linear-gradient(135deg, #1e1e2e 0%, #2d1b69 50%, #11152c 100%);
             min-height: 100vh;
-            color: #fff; /* Default white text */
-            overflow-x: hidden; /* Prevent horizontal scroll from orbs */
+            color: #fff;
+            overflow-x: hidden;
             position: relative;
-            display: flex; /* Use flexbox to center content */
-            justify-content: center;
-            align-items: center;
         }
 
-        /* Subtle noise overlay for texture */
+        /* Subtle noise overlay */
         body::before {
             content: '';
             position: fixed;
@@ -51,33 +43,22 @@
             z-index: 1;
         }
 
-        /* Floating orbs for dynamic background effect */
+        /* Floating orbs */
         .floating-orb {
             position: fixed;
             width: 300px;
             height: 300px;
             border-radius: 50%;
-            /* Toned down background opacity to be less distracting */
             background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08), transparent 70%);
-            backdrop-filter: blur(50px); /* Slightly less blur for performance and subtlety */
+            backdrop-filter: blur(50px);
             animation: float 20s infinite ease-in-out;
             pointer-events: none;
-            z-index: 0; /* Ensures orbs are behind content */
+            z-index: 0;
         }
 
-        .floating-orb:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
+        .floating-orb:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-orb:nth-child(2) { top: 60%; right: 10%; animation-delay: -10s; }
 
-        .floating-orb:nth-child(2) {
-            top: 60%;
-            right: 10%;
-            animation-delay: -10s;
-        }
-
-        /* Animation for floating orbs */
         @keyframes float {
             0%, 100% { transform: translate(0, 0) rotate(0deg); }
             33% { transform: translate(100px, -50px) rotate(120deg); }
@@ -87,11 +68,11 @@
         /* Main content container */
         .container {
             max-width: 1400px;
-            width: 100%; /* Ensure it takes full width on smaller screens */
+            width: 100%;
             margin: 0 auto;
             padding: 40px 20px;
             position: relative;
-            z-index: 2; /* Ensures content is above orbs and noise */
+            z-index: 2;
         }
 
         /* Header section */
@@ -106,7 +87,7 @@
         .greeting {
             font-size: 42px;
             font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #a8edea 100%); /* Text gradient */
+            background: linear-gradient(135deg, #ffffff 0%, #a8edea 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -119,71 +100,53 @@
             color: rgba(255, 255, 255, 0.7);
             font-weight: 400;
         }
+        
+        /* NEW: Container for nav buttons */
+        .nav-actions {
+            display: flex;
+            gap: 16px;
+        }
 
         /* Glassmorphic elements base style */
         .glassmorphic-card {
-            /* NEW: Increased background opacity for better readability */
-            background: rgba(255, 255, 255, 0.15); /* Slightly more opaque base */
-            backdrop-filter: blur(15px) saturate(180%); /* Moderate blur */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Defined border */
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 24px;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.05), /* Inner top highlight */
-                0 8px 32px rgba(0, 0, 0, 0.3); /* Outer shadow for depth */
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 32px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glassmorphic-card:hover {
-            background: rgba(255, 255, 255, 0.2); /* More opaque on hover */
+            background: rgba(255, 255, 255, 0.2);
             border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-5px); /* Slight lift */
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 15px 45px rgba(0, 0, 0, 0.4);
+            transform: translateY(-5px);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 15px 45px rgba(0, 0, 0, 0.4);
         }
 
-        /* Nav pill button (inherits glassmorphic-card traits but with specific overrides) */
         .nav-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             padding: 16px 32px;
             color: rgba(255, 255, 255, 0.9);
             text-decoration: none;
             font-weight: 600;
             font-size: 16px;
-            /* Using .glassmorphic-card as a base */
-            background: rgba(255, 255, 255, 0.08); /* More subtle for the nav pill */
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50px; /* Pill shape */
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 8px 32px rgba(0, 0, 0, 0.3);
-            overflow: hidden; /* For shine effect */
+            border-radius: 50px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: all 0.2s ease-in-out;
         }
-
-        .nav-pill::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
         .nav-pill:hover {
             background: rgba(255, 255, 255, 0.15);
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .nav-pill:hover::before {
-            left: 100%;
         }
 
         /* Metrics Grid */
@@ -194,382 +157,137 @@
             margin-bottom: 40px;
         }
 
-        /* Metric Card specific styles (inherits .glassmorphic-card) */
         .metric-card {
             padding: 32px;
             position: relative;
             overflow: hidden;
-            /* Subtle inner glow / gradient for card background */
             background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%);
             backdrop-filter: blur(15px);
         }
 
         .metric-card::before {
             content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            position: absolute; top: 0; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #4F46E5, #7C3AED, #EC4899); /* Accent line */
+            background: linear-gradient(90deg, #4F46E5, #7C3AED, #EC4899);
             opacity: 0.8;
         }
-
-        .metric-card::after { /* Light flare on hover */
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none; /* Crucial: ensures it doesn't block clicks */
-        }
-
         .metric-card:hover {
-            transform: translateY(-8px) scale(1.02); /* More pronounced lift */
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .metric-card:hover::after {
-            opacity: 1;
+            transform: translateY(-8px) scale(1.02);
         }
 
         .metric-title {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.7); /* Improved contrast */
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 12px;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .metric-value {
             font-size: 48px;
             font-weight: 800;
             margin-bottom: 8px;
-            /* Text gradient for numbers */
             background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1;
-            letter-spacing: -0.02em;
         }
+        .metric-change { font-size: 14px; color: #4ADE80; font-weight: 500; }
+        .icon { width: 24px; height: 24px; opacity: 0.8; }
 
-        .metric-change {
-            font-size: 14px;
-            color: #4ADE80; /* Bright green */
-            font-weight: 500;
-        }
-
-        .icon {
-            width: 24px;
-            height: 24px;
-            opacity: 0.8;
-        }
-
-        /* Chart section (inherits glassmorphic-card base) */
+        /* Chart section */
         .chart-section {
             padding: 32px;
             margin-bottom: 32px;
-            /* Base glassmorphic style */
-            background: rgba(255, 255, 255, 0.08); /* Slightly less opaque for larger area */
-            backdrop-filter: blur(15px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                0 8px 32px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            transition: all 0.3s ease;
         }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .chart-title { font-size: 24px; font-weight: 700; color: rgba(255, 255, 255, 0.95); }
 
-        .chart-section:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 15px 45px rgba(0, 0, 0, 0.4);
-        }
-
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-        }
-
-        .chart-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
-            letter-spacing: -0.01em;
-        }
-
-        .time-filter {
-            display: flex;
-            gap: 4px;
-            background: rgba(255, 255, 255, 0.05); /* Background for the pill container */
-            padding: 4px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .time-btn {
-            padding: 10px 20px;
-            border: none;
-            background: transparent;
-            border-radius: 12px;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
+        .chart-container {
             position: relative;
-            overflow: hidden;
-        }
-
-        .time-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+            height: 350px;
+            max-height: 350px;
             width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            opacity: 0;
-            transition: opacity 0.3s ease;
         }
-
-        .time-btn.active {
-            background: rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-
-        .time-btn:hover:not(.active)::before {
-            opacity: 1;
-        }
-
-        /* Agent table (inherits glassmorphic-card base) */
-        .agent-table {
-            border-radius: 24px;
-            overflow: hidden;
-            /* Base glassmorphic style */
-            background: rgba(255, 255, 255, 0.08); /* Slightly less opaque for larger area */
-            backdrop-filter: blur(15px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.05),
-                0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .agent-table:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                0 15px 45px rgba(0, 0, 0, 0.4);
-        }
-
-        .table-header {
-            padding: 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            background: rgba(255, 255, 255, 0.02); /* Very subtle background for header */
-        }
-
-        .table-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: rgba(255, 255, 255, 0.95);
-            margin-bottom: 8px;
-            letter-spacing: -0.01em;
-        }
-
-        .table-subtitle {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.6);
-            font-weight: 400;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 20px 32px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle row separator */
-        }
-
-        th {
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            background: rgba(255, 255, 255, 0.02); /* Subtle background for table headers */
-        }
-
-        td {
-            color: rgba(255, 255, 255, 0.9);
-            font-weight: 500;
-        }
-
-        tbody tr {
-            transition: all 0.3s ease;
-        }
-
-        tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03); /* Light hover effect for table rows */
-        }
-
-        /* Status badges */
-        .status-badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(5px); /* Light blur for badges */
-        }
-
-        .status-active {
-            background: rgba(74, 222, 128, 0.2); /* Green with transparency */
-            color: #4ADE80; /* Bright green text */
-            border: 1px solid rgba(74, 222, 128, 0.3);
-        }
-
-        .status-low-balance {
-            background: rgba(251, 191, 36, 0.2); /* Yellow with transparency */
-            color: #FBBF24; /* Bright yellow text */
-            border: 1px solid rgba(251, 191, 36, 0.3);
-        }
-
-        .amount {
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        .positive {
-            color: #4ADE80;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { padding: 40px; width: 90%; max-width: 500px; text-align: center; }
+        .modal-title { font-size: 24px; font-weight: 700; margin-bottom: 16px; color: rgba(255, 255, 255, 0.95); }
+        .modal-text { font-size: 16px; color: rgba(255, 255, 255, 0.7); margin-bottom: 24px; line-height: 1.6; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: rgba(255, 255, 255, 0.8); }
+        .form-input, .form-select {
+            width: 100%; padding: 14px 18px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08); /* Subtle glass background for buttons */
-            backdrop-filter: blur(8px); /* Moderate blur for buttons */
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8); /* White icons */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff; font-size: 16px; transition: all 0.2s ease;
+        }
+        .form-input:focus, .form-select:focus {
+            outline: none; border-color: rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.15);
+        }
+        .primary-btn {
+            background: linear-gradient(90deg, #4F46E5, #7C3AED);
+            border: none; color: #fff; padding: 16px 24px;
+            border-radius: 12px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; width: 100%;
+        }
+        .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); }
+        .secondary-btn {
+            background: transparent; border: 1px solid rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.8);
+            padding: 14px 24px; border-radius: 12px; font-size: 16px; font-weight: 500;
+            cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+        }
+        .secondary-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+        .agent-display-section {
+            padding: 32px; margin-bottom: 40px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .agent-title { font-size: 24px; font-weight: 700; color: rgba(255, 255, 255, 0.95); }
+        .caution-box {
+            padding: 16px; border-radius: 12px;
+            background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3);
+            color: #FBBF24; margin-bottom: 24px;
+            text-align: left; font-size: 14px;
+        }
+        .toast-message {
+            position: fixed; bottom: -100px; left: 50%;
+            transform: translateX(-50%); padding: 12px 24px;
+            border-radius: 12px; background: rgba(74, 222, 128, 0.8);
+            backdrop-filter: blur(10px); color: #fff; font-weight: 600;
+            z-index: 200; transition: bottom 0.5s ease-in-out;
         }
 
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        /* Custom Scrollbar styling for dark theme */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px; /* For horizontal scrollbars */
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-
-        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                padding: 20px 15px;
-            }
-
-            .greeting {
-                font-size: 32px;
-            }
-
-            .header {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-
-            .metrics-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .metric-card {
-                padding: 24px;
-            }
-
-            .metric-value {
-                font-size: 36px;
-            }
-
-            .chart-section {
-                padding: 24px;
-            }
-
-            table {
-                font-size: 14px;
-            }
-
-            th, td {
-                padding: 16px 20px;
-            }
-
-            .chart-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start; /* Align chart header items to start */
-            }
+            .container { padding: 20px 15px; }
+            .greeting { font-size: 32px; }
+            .header { flex-direction: column; gap: 20px; text-align: center; }
+            .metrics-grid { grid-template-columns: 1fr; gap: 16px; }
+            .metric-card, .chart-section { padding: 24px; }
+            .metric-value { font-size: 36px; }
+            .agent-display-section { flex-direction: column; gap: 20px; text-align: center; }
+            .chart-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .chart-container { height: 250px; }
+            .nav-actions { justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <!-- REMOVED: The problematic SVG filter here, as it's no longer used for distortion -->
 
     <div class="floating-orb"></div>
     <div class="floating-orb"></div>
@@ -578,293 +296,139 @@
         <!-- Header -->
         <div class="header">
             <div>
-                <!-- Personalized greeting for Israel -->
                 <div class="greeting">Good morning, Israel! 👋</div>
                 <div class="subtext">Here's what's happening with your terminals today</div>
             </div>
-            <!-- Applied new glassmorphic base class to nav-pill -->
-            <a href="#" class="nav-pill">Dashboard</a>
+            <!-- UPDATED: Nav actions are now in a container -->
+            <div class="nav-actions">
+                <a href="#" class="nav-pill">Dashboard</a>
+                <a href="#" class="nav-pill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    <span>Settings</span>
+                </a>
+            </div>
         </div>
 
-        <!-- Metrics Cards -->
-        <div class="metrics-grid">
-            <!-- Applied new glassmorphic base class to each metric card -->
-            <div class="metric-card glassmorphic-card">
+        <!-- Agent Display Section (Initially hidden) -->
+        <div id="agent-display-section" class="glassmorphic-card agent-display-section" style="display: none;">
+            <div id="agent-title" class="agent-title"></div>
+            <button id="connect-pos-btn" class="primary-btn" style="width: auto;">Connect POS Terminal</button>
+        </div>
+        <div id="toast-message" class="toast-message"></div>
+
+        <!-- Metrics Cards (Initially hidden) -->
+        <div id="metrics-grid" class="metrics-grid" style="display: none;">
+             <div class="metric-card glassmorphic-card">
                 <div class="metric-title">
-                    <!-- SVG for Today's Revenue -->
-                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/>
-                    </svg>
+                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z"/></svg>
                     Today's Revenue
                 </div>
-                <div class="metric-value">₦45,250</div>
-                <div class="metric-change">+12% from last month</div>
+                <div class="metric-value">₦0.00</div>
+                <div class="metric-change">No data yet</div>
             </div>
-
-            <div class="metric-card glassmorphic-card">
+             <div class="metric-card glassmorphic-card">
                 <div class="metric-title">
-                    <!-- SVG for Active Agents -->
-                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Active Agents
+                     <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                    Transactions
                 </div>
-                <div class="metric-value">8</div>
-                <div class="metric-change">2 new this month</div>
+                <div class="metric-value">0</div>
+                <div class="metric-change">Awaiting first sync</div>
             </div>
-
-            <div class="metric-card glassmorphic-card">
+             <div class="metric-card glassmorphic-card">
                 <div class="metric-title">
-                    <!-- SVG for Transactions Today -->
-                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    Transactions Today
+                   <svg class="icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                    POS Provider
                 </div>
-                <div class="metric-value">142</div>
-                <div class="metric-change">+8% from yesterday</div>
-            </div>
-
-            <div class="metric-card glassmorphic-card">
-                <div class="metric-title">
-                    <!-- SVG for Low Balance Alert -->
-                    <svg class="icon" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"/>
-                    </svg>
-                    Low Balance Alert
-                </div>
-                <div class="metric-value">2</div>
-                <div class="metric-change">Need immediate attention</div>
+                <div id="pos-provider-display" class="metric-value" style="font-size: 36px;">-</div>
+                <div class="metric-change">Device ID: <span id="pos-id-display">-</span></div>
             </div>
         </div>
 
-        <!-- Profit Over Time Chart -->
-        <!-- Applied new glassmorphic base class to chart section -->
-        <div class="chart-section glassmorphic-card">
+        <!-- Chart Section (Initially hidden) -->
+        <div id="chart-section" class="chart-section glassmorphic-card" style="display: none;">
             <div class="chart-header">
-                <h3 class="chart-title">Profit Over Time</h3>
-                <div class="time-filter">
-                    <!-- Applied general button style to time filter buttons -->
-                    <button class="time-btn active">7D</button>
-                    <button class="time-btn">30D</button>
-                    <button class="time-btn">90D</button>
-                </div>
+                <div class="chart-title">Revenue Overview</div>
             </div>
-            <canvas id="profitChart" height="100"></canvas>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
         </div>
+    </div>
 
-        <!-- Agent Performance Chart -->
-        <!-- Applied new glassmorphic base class to chart section -->
-        <div class="chart-section glassmorphic-card">
-            <div class="chart-header">
-                <h3 class="chart-title">Agent Performance</h3>
-                <div class="time-filter">
-                    <!-- Applied general button style to time filter buttons -->
-                    <button class="time-btn active">Today</button>
-                    <button class="time-btn">Week</button>
-                </div>
+    <!-- Create Agent Modal -->
+    <div id="create-agent-modal" class="modal-overlay">
+        <div class="modal-content glassmorphic-card">
+            <h2 class="modal-title">Welcome to MyPOS Dashboard!</h2>
+            <p class="modal-text">You haven’t set up any agents or POS terminals yet. Let's start by creating an agent profile.</p>
+            <div class="form-group">
+                <label for="agent-name-input" class="form-label">Agent name</label>
+                <input type="text" id="agent-name-input" class="form-input" placeholder="e.g., Precious Stores">
             </div>
-            <canvas id="performanceChart" height="120"></canvas>
+            <button id="create-agent-btn" class="primary-btn">Create Agent</button>
         </div>
+    </div>
 
-        <!-- Agent Terminals Table -->
-        <!-- Applied new glassmorphic base class to agent table -->
-        <div class="agent-table glassmorphic-card">
-            <div class="table-header">
-                <div class="table-title">Agent Terminals</div>
-                <div class="table-subtitle">Monitor your POS terminals and their daily performance</div>
+    <!-- Connect POS Modal -->
+    <div id="connect-pos-modal" class="modal-overlay">
+        <div class="modal-content glassmorphic-card">
+            <h2 class="modal-title">Connect a POS Terminal</h2>
+            <div class="caution-box">
+                ⚠️ We only fetch transaction history; we do not alter your POS balance.
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Terminal Name</th>
-                        <th>Location</th>
-                        <th>Last Check-in</th>
-                        <th>Status</th>
-                        <th>Balance</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Kemi's Shop</strong></td>
-                        <td>Ikeja, Lagos</td>
-                        <td>2 hours ago</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td class="amount positive">₦125,000</td>
-                        <td class="actions">
-                            <button class="action-btn">👁</button>
-                            <button class="action-btn">⋯</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ade Mobile Money</strong></td>
-                        <td>VI, Lagos</td>
-                        <td>30 minutes ago</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td class="amount positive">₦89,000</td>
-                        <td class="actions">
-                            <button class="action-btn">👁</button>
-                            <button class="action-btn">⋯</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Blessing Ventures</strong></td>
-                        <td>Surulere, Lagos</td>
-                        <td>1 hour ago</td>
-                        <td><span class="status-badge status-low-balance">Low Balance</span></td>
-                        <td class="amount">₦15,000</td>
-                        <td class="actions">
-                            <button class="action-btn">👁</button>
-                            <button class="action-btn">⋯</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Chidi POS Center</strong></td>
-                        <td>Yaba, Lagos</td>
-                        <td>45 minutes ago</td>
-                        <td><span class="status-badge status-active">Active</span></td>
-                        <td class="amount positive">₦78,000</td>
-                        <td class="actions">
-                            <button class="action-btn">👁</button>
-                            <button class="action-btn">⋯</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="form-group">
+                <label for="pos-id-input" class="form-label">POS Device ID</label>
+                <input type="text" id="pos-id-input" class="form-input" placeholder="Enter device serial or ID">
+            </div>
+            <div class="form-group">
+                <label for="pos-provider-select" class="form-label">Provider</label>
+                <select id="pos-provider-select" class="form-select">
+                    <option value="">Select a provider</option>
+                    <option value="Opay">Opay</option>
+                    <option value="PalmPay">PalmPay</option>
+                    <option value="Moniepoint">Moniepoint</option>
+                    <option value="Access Bank">Access Bank</option>
+                    <option value="Zenith Bank">Zenith Bank</option>
+                    <option value="Kuda">Kuda</option>
+                    <option value="First Bank">First Bank</option>
+                </select>
+            </div>
+            <button id="connect-btn" class="primary-btn">Connect</button>
+            <button id="cancel-pos-btn" class="secondary-btn">Cancel</button>
         </div>
     </div>
 
     <script>
-        // Profit Over Time Chart
-        const profitCtx = document.getElementById('profitChart').getContext('2d');
-        new Chart(profitCtx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    data: [20000, 22000, 18000, 28000, 32000, 45000, 38000],
-                    borderColor: '#7B68EE', /* Mid-purple for line */
-                    backgroundColor: 'rgba(123, 104, 238, 0.15)', /* More subtle transparent fill */
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#7B68EE', /* Point color */
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        padding: 10,
-                        cornerRadius: 8,
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.7)' /* Lighter labels for X-axis */
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)' /* Very subtle grid lines */
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value) {
-                                return '₦' + (value/1000) + 'k';
-                            },
-                            color: 'rgba(255, 255, 255, 0.7)' /* Lighter labels for Y-axis */
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)' /* Very subtle grid lines */
-                        }
-                    }
-                },
-                elements: {
-                    point: {
-                        hoverRadius: 8
-                    }
-                }
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element Selectors ---
+            const createAgentModal = document.getElementById('create-agent-modal');
+            const connectPosModal = document.getElementById('connect-pos-modal');
+            const agentNameInput = document.getElementById('agent-name-input');
+            const createAgentBtn = document.getElementById('create-agent-btn');
+            const agentDisplaySection = document.getElementById('agent-display-section');
+            const agentTitle = document.getElementById('agent-title');
+            const connectPosBtn = document.getElementById('connect-pos-btn');
+            const posIdInput = document.getElementById('pos-id-input');
+            const posProviderSelect = document.getElementById('pos-provider-select');
+            const connectBtn = document.getElementById('connect-btn');
+            const cancelPosBtn = document.getElementById('cancel-pos-btn');
+            const metricsGrid = document.getElementById('metrics-grid');
+            const chartSection = document.getElementById('chart-section');
+            const posProviderDisplay = document.getElementById('pos-provider-display');
+            const posIdDisplay = document.getElementById('pos-id-display');
+            const toastMessage = document.getElementById('toast-message');
+            
+            let revenueChart = null; 
 
-        // Agent Performance Chart
-        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-        new Chart(performanceCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Kemi\'s Shop', 'Ade Mobile', 'Blessing', 'Chidi POS', 'Tolu Center'],
-                datasets: [{
-                    data: [85, 92, 45, 78, 88],
-                    backgroundColor: (ctx) => {
-                        // Custom colors based on value for a visual alert
-                        const value = ctx.parsed.y;
-                        if (value < 60) {
-                            return 'rgba(239, 68, 68, 0.4)'; /* Red with transparency for low performance */
-                        }
-                        return 'rgba(123, 104, 238, 0.6)'; /* Purple with transparency for good performance */
-                    },
-                    borderRadius: 8, /* More rounded bars */
-                    borderSkipped: false,
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: 'rgba(0,0,0,0.7)',
-                        titleColor: '#fff',
-                        bodyColor: '#fff',
-                        padding: 10,
-                        cornerRadius: 8,
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'rgba(255, 255, 255, 0.7)' /* Lighter labels for X-axis */
-                        },
-                        grid: {
-                            display: false /* No vertical grid lines */
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        ticks: {
-                            callback: function(value) {
-                                return value + '%';
-                            },
-                            color: 'rgba(255, 255, 255, 0.7)' /* Lighter labels for Y-axis */
-                        },
-                        grid: {
-                            color: 'rgba(255, 255, 255, 0.05)' /* Very subtle horizontal grid lines */
-                        }
-                    }
-                }
-            }
-        });
+            // --- Helper Functions ---
+            const showToast = (message) => {
+                toastMessage.textContent = message;
+                toastMessage.style.bottom = '20px';
+                setTimeout(() => {
+                    toastMessage.style.bottom = '-100px';
+                }, 3000);
+            };
 
-        // Interactive time filter buttons
-        document.querySelectorAll('.time-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Remove active class from siblings
-                this.parentNode.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-                // Add active class to clicked button
-                this.classList.add('active');
-                // You can add logic here to update chart data based on the selected time filter
-            });
-        });
-    </script>
-</body>
-</html>
-
+            const noDataTextPlugin = {
+                id: 'noDataTextPlugin',
+                afterDraw: (chart) => {
+                    const isDataEmpty = chart.data.datasets.every(ds 
